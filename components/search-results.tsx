@@ -1,3 +1,5 @@
+"use client";
+
 import { SearchQuery } from "@/definitions/types";
 import { SearchResult } from "./search-result";
 

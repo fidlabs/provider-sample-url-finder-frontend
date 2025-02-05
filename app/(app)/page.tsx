@@ -14,6 +14,7 @@ import {
   Input,
   Label,
 } from "@fidlabs/common-react-ui";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface FormData {
@@ -22,6 +23,7 @@ interface FormData {
 }
 
 export default function HomePage() {
+  const [isClient, setIsClient] = useState(false);
   const [queries, search] = useSearchHistory();
   const {
     register,
@@ -42,6 +44,10 @@ export default function HomePage() {
 
     reset();
   });
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <div className="container mx-auto">
@@ -88,7 +94,7 @@ export default function HomePage() {
         </Card>
       </form>
 
-      <SearchResults items={queries} />
+      {isClient && <SearchResults items={queries} />}
     </div>
   );
 }
