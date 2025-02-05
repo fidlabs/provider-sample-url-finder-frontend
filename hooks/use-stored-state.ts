@@ -8,17 +8,21 @@ export function useStoredState<T extends string | undefined>(
   storageKey: string,
   defaultValue?: T
 ): [WithDefault<T>, (nextValue: string | null) => void] {
-  const [value, setValue] = useState(
-    localStorage.getItem(storageKey) ?? defaultValue ?? null
-  );
+  const initialValue =
+    typeof localStorage !== "undefined"
+      ? localStorage.getItem(storageKey)
+      : undefined;
+  const [value, setValue] = useState(initialValue ?? defaultValue ?? null);
 
   const storeAndSetValue = useCallback(
     (nextValue: string | null) => {
       try {
-        if (nextValue === null) {
-          localStorage.removeItem(storageKey);
-        } else {
-          localStorage.setItem(storageKey, nextValue);
+        if (typeof localStorage !== "undefined") {
+          if (nextValue === null) {
+            localStorage.removeItem(storageKey);
+          } else {
+            localStorage.setItem(storageKey, nextValue);
+          }
         }
       } catch {
         // Fail silently
