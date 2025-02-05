@@ -1,7 +1,7 @@
 import { Providers } from "@/components/providers";
+import { APP_VERSION } from "@/definitions/constants";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
-import { version } from "../../package.json";
 
 export default function AppLayout({ children }: PropsWithChildren) {
   return (
@@ -17,7 +17,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
       <main className="pb-24 flex-1">{children}</main>
       <footer className="container mx-auto p-3">
         <p className="text-center text-muted-foreground text-sm">
-          Version v{version}
+          Version v{APP_VERSION}
         </p>
       </footer>
     </Providers>
