@@ -1,7 +1,6 @@
-name: Check code formatting, lint and build
+name: Check code formatting & lint
 
 on:
-  pull_request:
   workflow_call:
 
 jobs:
@@ -25,6 +24,3 @@ jobs:
 
       - name: Run Prettier
         run: npm run prettier
-
-      - name: Run Build
-        run: npm run build
