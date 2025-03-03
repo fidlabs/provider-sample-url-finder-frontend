@@ -24,6 +24,23 @@ export interface URLFinderAPIErrorResponse {
   error: string;
 }
 
+export interface URLFinderAPICreateJobResponse {
+  id?: string | null;
+  result: "JobCreated" | URLFinderResultCode;
+}
+
+export interface URLFinderAPIJobResponse {
+  client: string | null;
+  created_at: string;
+  error?: string | null;
+  id: string;
+  provider: string;
+  retrievability: number | null;
+  status: "Pending" | "Completed" | "Failed";
+  updated_at: string;
+  working_url: string | null;
+}
+
 export interface SearchQuery {
   provider: FilecoinAddress;
   client?: FilecoinAddress;
