@@ -1,12 +1,15 @@
 import { QueryKey, URL_FINDER_API_URL } from "@/definitions/constants";
 import {
   SearchResult,
-  URLFinderAPIErrorResponse,
   URLFinderAPIRetrieviabilityResponse,
   URLFinderAPIURLResponse,
-  URLFinderResultCode,
 } from "@/definitions/types";
-import { isFilecoinAddress, isPlainObject } from "@/lib/utils";
+import {
+  isFilecoinAddress,
+  isPlainObject,
+  isURLFinderResultCode,
+  parseURLFinderAPIResponseOrThrow,
+} from "@/lib/utils";
 import { QueryFunction, useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 
@@ -38,11 +41,11 @@ export function useURLSearch(input: SearchInput) {
       }
 
       const [urlResult, retrievabilityResult] = await Promise.all([
-        fetch(urlEndpoint).then(parseResponseOrThrow),
+        fetch(urlEndpoint).then(parseURLFinderAPIResponseOrThrow),
         clientIdProvided
           ? fetch(
               `${URL_FINDER_API_URL}/url/retrievability/${provider}/${client}`
-            ).then(parseResponseOrThrow)
+            ).then(parseURLFinderAPIResponseOrThrow)
           : Promise.resolve(null),
       ]);
 
@@ -71,37 +74,8 @@ export function useURLSearch(input: SearchInput) {
   });
 }
 
-async function parseResponseOrThrow(response: Response): Promise<unknown> {
-  try {
-    const result = await response.json();
-
-    if (!response.ok) {
-      const errorMessage = isErrorResponse(result)
-        ? result.error
-        : "An unknown error has occured";
-
-      throw new Error(errorMessage);
-    }
-
-    return result;
-  } catch {
-    if (!response.ok) {
-      throw new Error(`HTTP Error ${response.status}`);
-    }
-
-    throw new Error("Invalid Finder API response");
-  }
-}
-
-function isValidResultCode(input: unknown): input is URLFinderResultCode {
-  return (
-    typeof input === "string" &&
-    Object.values<string>(URLFinderResultCode).includes(input)
-  );
-}
-
 function isURLResponse(input: unknown): input is URLFinderAPIURLResponse {
-  if (!isPlainObject(input) || !isValidResultCode(input.result)) {
+  if (!isPlainObject(input) || !isURLFinderResultCode(input.result)) {
     return false;
   }
 
@@ -113,11 +87,7 @@ function isRetrievabilityResponse(
 ): input is URLFinderAPIRetrieviabilityResponse {
   return (
     isPlainObject(input) &&
-    isValidResultCode(input.result) &&
+    isURLFinderResultCode(input.result) &&
     typeof input.retrievability_percent === "number"
   );
-}
-
-function isErrorResponse(input: unknown): input is URLFinderAPIErrorResponse {
-  return isPlainObject(input) && typeof input.error === "string";
 }

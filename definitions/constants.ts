@@ -6,4 +6,9 @@ export const ADDRESS_EXPLORER_URL = "https://filfox.info/en/address";
 
 export enum QueryKey {
   SEARCH = "search",
+  GET_JOB = "get_job",
+}
+
+export enum MutationKey {
+  SEARCH = "search",
 }
