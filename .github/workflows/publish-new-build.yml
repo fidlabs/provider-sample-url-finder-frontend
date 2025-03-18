@@ -97,7 +97,9 @@ jobs:
 
   git-tag:
     runs-on: ubuntu-latest
-    needs: production-publish
+    needs:
+      - bump-version
+      - production-publish
     if: |
       ${{ github.ref_name == 'main' && inputs.version != '' }} &&
       always() &&
