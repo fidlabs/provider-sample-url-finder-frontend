@@ -48,18 +48,20 @@ function isJobResponse(input: unknown): input is URLFinderAPIJobResponse {
     return false;
   }
 
-  const hasValidResults = Array.isArray(input.results) && (
-    input.results.length === 0 ||
-    input.results.every(result => 
-      isPlainObject(result) && 
-      typeof result.provider === "string" &&
-      (result.client === null || typeof result.client === "string") &&
-      (result.working_url === null || typeof result.working_url === "string") &&
-      typeof result.retrievability === "number" &&
-      isURLFinderResultCode(result.result) &&
-      (result.error == null || typeof result.error === "string")
-    )
-  );
+  const hasValidResults =
+    Array.isArray(input.results) &&
+    (input.results.length === 0 ||
+      input.results.every(
+        (result) =>
+          isPlainObject(result) &&
+          typeof result.provider === "string" &&
+          (result.client === null || typeof result.client === "string") &&
+          (result.working_url === null ||
+            typeof result.working_url === "string") &&
+          typeof result.retrievability === "number" &&
+          isURLFinderResultCode(result.result) &&
+          (result.error == null || typeof result.error === "string")
+      ));
 
   return (
     (input.client === null || typeof input.client === "string") &&

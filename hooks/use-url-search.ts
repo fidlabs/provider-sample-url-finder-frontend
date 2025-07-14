@@ -18,7 +18,11 @@ interface SearchInput {
   client?: string | null;
 }
 
-type URLSearchQueryKey = [QueryKey.SEARCH, string | null | undefined, string | null | undefined];
+type URLSearchQueryKey = [
+  QueryKey.SEARCH,
+  string | null | undefined,
+  string | null | undefined,
+];
 
 export function useURLSearch(input: SearchInput) {
   const search = useCallback<QueryFunction<SearchResult, URLSearchQueryKey>>(

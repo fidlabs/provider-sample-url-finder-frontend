@@ -40,7 +40,7 @@ export async function parseURLFinderAPIResponseOrThrow(
 ): Promise<unknown> {
   try {
     const result = await response.json();
-
+    console.log("Parsed result:", result);
     if (!response.ok) {
       const errorMessage = isURLFinderAPIErrorResponse(result)
         ? result.error

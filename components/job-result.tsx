@@ -51,9 +51,9 @@ export function JobResult({ jobId }: SearchResultProps) {
                       </Link>
                     </Button>
                   )}
-                  {!!jobResult.provider && !!jobResult.client && 
+                  {!!jobResult.provider && !!jobResult.client && (
                     <SlashIcon size={12} />
-                  }
+                  )}
 
                   {!!jobResult.client && (
                     <Button className="text-lg" variant="link" asChild>
@@ -76,7 +76,7 @@ export function JobResult({ jobId }: SearchResultProps) {
             <CardContent className="grid gap-4">
               {jobResult.results.map((result, index) => (
                 <div key={index} className="p-3 border rounded-md">
-                  {(jobResult.provider == null &&
+                  {jobResult.provider == null && (
                     // for client only jobs, show provider for each result
                     <Button className="text-lg" variant="link" asChild>
                       <Link
