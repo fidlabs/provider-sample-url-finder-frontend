@@ -29,20 +29,28 @@ export interface URLFinderAPICreateJobResponse {
   result: "JobCreated" | URLFinderResultCode;
 }
 
-export interface URLFinderAPIJobResponse {
-  client: string | null;
-  created_at: string;
-  error?: string | null;
-  id: string;
+export interface URLFinderAPIJobResultResponse {
   provider: string;
-  retrievability: number | null;
-  status: "Pending" | "Completed" | "Failed";
-  updated_at: string;
+  client: string | null;
   working_url: string | null;
+  retrievability: number;
+  result: URLFinderResultCode;
+  error?: string | null;
+}
+
+export interface URLFinderAPIJobResponse {
+  id: string;
+  client: string | null;
+  provider: string | null;
+  status: "Pending" | "Completed" | "Failed";
+  error?: string | null;
+  results: URLFinderAPIJobResultResponse[];
+  created_at: string;
+  updated_at: string;
 }
 
 export interface SearchQuery {
-  provider: FilecoinAddress;
+  provider?: FilecoinAddress;
   client?: FilecoinAddress;
 }
 
