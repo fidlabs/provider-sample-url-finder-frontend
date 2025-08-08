@@ -48,19 +48,31 @@ function isJobResponse(input: unknown): input is URLFinderAPIJobResponse {
     return false;
   }
 
+  const hasValidResults =
+    Array.isArray(input.results) &&
+    (input.results.length === 0 ||
+      input.results.every(
+        (result) =>
+          isPlainObject(result) &&
+          typeof result.provider === "string" &&
+          (result.client === null || typeof result.client === "string") &&
+          (result.working_url === null ||
+            typeof result.working_url === "string") &&
+          typeof result.retrievability === "number" &&
+          isURLFinderResultCode(result.result) &&
+          (result.error == null || typeof result.error === "string")
+      ));
+
   return (
     (input.client === null || typeof input.client === "string") &&
     typeof input.created_at === "string" &&
     (input.error == null || typeof input.error === "string") &&
     typeof input.id === "string" &&
-    typeof input.provider === "string" &&
-    (input.result == null || isURLFinderResultCode(input.result)) &&
-    (input.retrievability === null ||
-      typeof input.retrievability === "number") &&
+    (input.provider == null || typeof input.provider === "string") &&
+    hasValidResults &&
     typeof input.status === "string" &&
     ["Pending", "Completed", "Failed"].includes(input.status) &&
-    typeof input.updated_at === "string" &&
-    (input.working_url === null || typeof input.working_url === "string")
+    typeof input.updated_at === "string"
   );
 }
 

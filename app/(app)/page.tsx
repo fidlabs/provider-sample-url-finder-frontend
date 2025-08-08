@@ -20,7 +20,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface FormData {
-  provider: string;
+  provider?: string;
   client?: string;
 }
 
@@ -31,6 +31,7 @@ export default function HomePage() {
     handleSubmit,
     reset: resetForm,
     formState: { isSubmitting, isValid },
+    watch,
   } = useForm<FormData>();
   const {
     data: searchResult,
@@ -41,6 +42,9 @@ export default function HomePage() {
     search,
   } = useSearchHistory();
   const formEnabled = !searchResult && !searchError;
+  const providerValue = watch("provider");
+  const clientValue = watch("client");
+  const isFormValid = (providerValue || clientValue) && isValid;
 
   const reset = useCallback(() => {
     resetForm();
@@ -48,12 +52,12 @@ export default function HomePage() {
   }, [resetForm, resetSearch]);
 
   const onSubmit = handleSubmit(async ({ provider, client }) => {
-    if (!isFilecoinAddress(provider)) {
+    if (!isFilecoinAddress(provider) && !isFilecoinAddress(client)) {
       return;
     }
 
     const response = await search({
-      provider,
+      provider: isFilecoinAddress(provider) ? provider : undefined,
       client: isFilecoinAddress(client) ? client : undefined,
     });
 
@@ -88,7 +92,8 @@ export default function HomePage() {
                 placeholder="Enter SP address..."
                 disabled={!formEnabled}
                 {...register("provider", {
-                  validate: isFilecoinAddress,
+                  required: false,
+                  validate: (value) => value === "" || isFilecoinAddress(value),
                 })}
               />
             </div>
@@ -135,7 +140,7 @@ export default function HomePage() {
             {formEnabled && (
               <Button
                 className="w-full"
-                disabled={!isValid || isSubmitting}
+                disabled={!isFormValid || isSubmitting}
                 type="submit"
               >
                 Find URL
